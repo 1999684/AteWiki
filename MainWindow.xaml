@@ -1,0 +1,105 @@
+﻿<Window x:Class="AtelierWiki.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="AteWiki" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"  
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Border Background="#0F172A" CornerRadius="8" BorderThickness="1">
+        <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#00F0FF" Offset="0"/>
+                <GradientStop Color="#1E293B" Offset="0.5"/>
+                <GradientStop Color="#00F0FF" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+
+        <Border.Effect>
+            <DropShadowEffect Color="#00F0FF" BlurRadius="15" ShadowDepth="0" Opacity="0.4"/>
+        </Border.Effect>
+
+        <Border.Resources>
+            <SolidColorBrush x:Key="TechTextBrush" Color="#E2E8F0"/>
+            <SolidColorBrush x:Key="TechAccentBrush" Color="#00F0FF"/>
+            <SolidColorBrush x:Key="TechHoverBrush" Color="#3300F0FF"/>
+
+            <Style x:Key="TitleButtonStyle" TargetType="Button">
+                <Setter Property="Width" Value="46"/>
+                <Setter Property="Height" Value="32"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Foreground" Value="{StaticResource TechTextBrush}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="BtnBorder" Background="{TemplateBinding Background}" CornerRadius="4" Margin="2">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="BtnBorder" Property="Background" Value="{StaticResource TechHoverBrush}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TechAccentBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource TitleButtonStyle}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#CCFF0033"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Resources>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="TitleBar_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.ColumnSpan="3" VerticalAlignment="Bottom" Height="1" Background="{StaticResource TechAccentBrush}" Opacity="0.3"/>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
+                    <Rectangle Width="4" Height="16" Fill="{StaticResource TechAccentBrush}" Margin="0,0,8,0">
+                        <Rectangle.Effect>
+                            <DropShadowEffect Color="#00F0FF" BlurRadius="6" ShadowDepth="0"/>
+                        </Rectangle.Effect>
+                    </Rectangle>
+                    <TextBlock Text="ATELIER WIKI" 
+                        FontWeight="Bold" FontSize="14" Foreground="{StaticResource TechTextBrush}" 
+                        VerticalAlignment="Center" FontFamily="Segoe UI" FontStretch="Expanded">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="#00F0FF" BlurRadius="4" ShadowDepth="0" Opacity="0.3"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+                    <Button Click="Minimize_Click" Style="{StaticResource TitleButtonStyle}" Content="—"/>
+                    <Button x:Name="BtnMaximize" Click="Maximize_Click" Style="{StaticResource TitleButtonStyle}" Content="▢"/>
+                    <Button Click="Close_Click" Style="{StaticResource CloseButtonStyle}" Content="✕"/>
+                </StackPanel>
+            </Grid>
+
+            <Frame Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden" ClipToBounds="True"/>
+        </Grid>
+    </Border>
+</Window>

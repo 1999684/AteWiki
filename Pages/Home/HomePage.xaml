@@ -1,0 +1,196 @@
+﻿<Page x:Class="AtelierWiki.Pages.Home.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:banner="clr-namespace:AtelierWiki.Components.Banner"
+      xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+      mc:Ignorable="d" 
+      d:DesignHeight="1200" d:DesignWidth="1000"
+      Title="Atelier Wiki Home">
+
+    <Page.Resources>
+        <!-- 分组与排序逻辑 (保持不变) -->
+        <CollectionViewSource x:Key="GroupedGames" Source="{Binding}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="TypeName"/>
+            </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <cm:SortDescription PropertyName="Type" Direction="Ascending"/>
+                <cm:SortDescription PropertyName="Id" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <!-- 定义科技感渐变画刷 -->
+        <LinearGradientBrush x:Key="TechBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#0F172A" Offset="0.0"/>
+            <!-- 深蓝黑 -->
+            <GradientStop Color="#1E293B" Offset="1.0"/>
+            <!-- 稍浅的蓝灰 -->
+        </LinearGradientBrush>
+
+        <!-- 卡片默认边框色 -->
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#33475D6F"/>
+        <!-- 科技感高亮色 (电光蓝) -->
+        <SolidColorBrush x:Key="TechAccentBrush" Color="#00F0FF"/>
+    </Page.Resources>
+
+    <!-- 1. 背景改为深色科技风渐变 -->
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" Background="{StaticResource TechBackgroundBrush}">
+
+        <StackPanel>
+
+            <!-- A. 顶部轮播图组件 -->
+            <!-- 建议Banner内部也使用深色或高对比度图片以配合主题 -->
+            <banner:BannerControl Height="380" Margin="0,0,0,20"/>
+
+            <!-- B. 下方游戏封面列表 -->
+            <ItemsControl x:Name="GameListControl" ItemsSource="{Binding Source={StaticResource GroupedGames}}" Padding="20,0,20,40">
+
+                <!-- 分组头部样式 -->
+                <ItemsControl.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <!-- 修改：底部线条改为发光的青色渐变，文字改为白色 -->
+                                <Border Margin="10,20,10,10" Padding="0,0,0,8" BorderThickness="0,0,0,2">
+                                    <Border.BorderBrush>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#00F0FF" Offset="0"/>
+                                            <GradientStop Color="Transparent" Offset="0.8"/>
+                                        </LinearGradientBrush>
+                                    </Border.BorderBrush>
+
+                                    <TextBlock Text="{Binding Name}" 
+                                               FontSize="24" FontWeight="Bold" Foreground="#E2E8F0" FontFamily="Segoe UI">
+                                        <!-- 修改：文字发光效果 -->
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="#00F0FF" BlurRadius="10" ShadowDepth="0" Opacity="0.6"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                </Border>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ItemsControl.GroupStyle>
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <!-- 单个卡片样式 -->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
+                                Background="Transparent" BorderThickness="0" Margin="10"
+                                Cursor="Hand" Click="GameCard_Click" Tag="{Binding Id}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <!-- 修改：卡片背景改为深色半透明，加边框 -->
+                                    <Border x:Name="CardBorder"
+                                            Width="180" Height="240" 
+                                            Background="#201E293B" 
+                                            BorderBrush="{StaticResource CardBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4" Margin="5">
+
+                                        <!-- 修改：默认阴影改为微弱的蓝光 -->
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.3" Color="#000000"/>
+                                        </Border.Effect>
+
+                                        <Grid>
+                                            <!-- 图片容器 -->
+                                            <Border CornerRadius="3" ClipToBounds="True" Margin="1">
+                                                <Image 
+                                                    Source="{Binding CoverImage}" 
+                                                    Stretch="UniformToFill" 
+                                                    RenderOptions.BitmapScalingMode="HighQuality"/>
+                                            </Border>
+
+                                            <!-- 悬停遮罩层 - 科技感扫描线纹理或纯色遮罩 -->
+                                            <Border 
+                                                Name="HoverOverlay" 
+                                                CornerRadius="3" 
+                                                Background="#000000"
+                                                Opacity="0"
+                                                IsHitTestVisible="False"/>
+
+                                            <!-- 名称显示区域 - 科技感标签样式 -->
+                                            <Border
+                                                Name="TitleContainer" 
+                                                VerticalAlignment="Bottom"
+                                                Height="60"
+                                                CornerRadius="0,0,3,3"
+                                                Background="#E60F172A" 
+                                                BorderBrush="{StaticResource TechAccentBrush}"
+                                                BorderThickness="0,1,0,0"
+                                                IsHitTestVisible="False"
+                                                Opacity="0"
+                                                RenderTransformOrigin="0.5,1">
+                                                <Border.RenderTransform>
+                                                    <TranslateTransform Y="10"/>
+                                                </Border.RenderTransform>
+
+                                                <TextBlock
+                                                    Text="{Binding Title}" 
+                                                    TextWrapping="Wrap" 
+                                                    TextTrimming="CharacterEllipsis"
+                                                    FontSize="13" 
+                                                    FontWeight="SemiBold"
+                                                    Foreground="#00F0FF" 
+                                                    VerticalAlignment="Center" 
+                                                    HorizontalAlignment="Center" 
+                                                    TextAlignment="Center"
+                                                    Margin="10,5">
+                                                     <!-- 文字微发光 -->
+                                                    <TextBlock.Effect>
+                                                        <DropShadowEffect Color="#00F0FF" BlurRadius="2" ShadowDepth="0" Opacity="0.5"/>
+                                                    </TextBlock.Effect>
+                                                </TextBlock>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <!-- 悬停时：边框变为发光青色 -->
+                                            <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource TechAccentBrush}"/>
+                                            <!-- 悬停时：增加外发光 -->
+                                            <Setter TargetName="CardBorder" Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.8" Color="#00F0FF"/>
+                                                </Setter.Value>
+                                            </Setter>
+
+                                            <!-- 悬停时：遮罩层变暗，突出文字 -->
+                                            <Setter TargetName="HoverOverlay" Property="Opacity" Value="0.4"/>
+
+                                            <!-- 悬停时：显示标题栏 -->
+                                            <Setter TargetName="TitleContainer" Property="Opacity" Value="1"/>
+                                            <Setter TargetName="TitleContainer" Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <TranslateTransform Y="0"/>
+                                                </Setter.Value>
+                                            </Setter>
+
+                                            <!-- 悬停时：整体轻微上浮 -->
+                                            <Setter Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <TranslateTransform Y="-4"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
