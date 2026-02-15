@@ -309,10 +309,6 @@ namespace AtelierWiki.Data
             });
         }
 
-        // ==========================================
-        // 6. 数据读取方法
-        // ==========================================
-
         public static List<BannerItem> GetBanners()
         {
             using (var conn = new SQLiteConnection(ConnectionString))

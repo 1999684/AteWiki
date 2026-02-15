@@ -39,10 +39,15 @@ namespace AtelierWiki.Pages.Home
         {
             if (sender is Button btn && btn.Tag is int gameId)
             {
-                // 暂时弹窗显示 ID，后续这里写跳转到详情页的逻辑
-                MessageBox.Show($"你点击了游戏 ID: {gameId}");
-
-                // NavigationService.Navigate(new DetailPage(gameId));
+                // 推荐根据 ID 跳转
+                if (gameId == 1)
+                {
+                    NavigationService.Navigate(new Pages.GameData.AteWikiA11());
+                }
+                else
+                {
+                    MessageBox.Show($"你点击了游戏 ID: {gameId} (暂无详情页)");
+                }
             }
         }
     }
