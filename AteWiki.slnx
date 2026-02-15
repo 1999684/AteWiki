@@ -3,6 +3,11 @@
     <Platform Name="Any CPU" />
     <Platform Name="x64" />
   </Configurations>
+  <Project Path="../AteWikiSetUp/AteWikiSetUp.vdproj" Type="Installer">
+    <BuildType Solution="Debug|x64" Project="Release" />
+    <Build Solution="Debug|x64" />
+    <Build Solution="Release|Any CPU" />
+  </Project>
   <Project Path="AteWiki.csproj" Id="28785d12-19b9-4b58-b157-622665d7ca77">
     <Platform Solution="*|x64" Project="x64" />
   </Project>
