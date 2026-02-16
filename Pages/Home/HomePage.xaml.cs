@@ -39,15 +39,12 @@ namespace AtelierWiki.Pages.Home
         {
             if (sender is Button btn && btn.Tag is int gameId)
             {
-                // 推荐根据 ID 跳转
-                if (gameId == 1)
-                {
-                    NavigationService.Navigate(new Pages.GameData.AteWikiA11());
-                }
-                else
-                {
-                    MessageBox.Show($"你点击了游戏 ID: {gameId} (暂无详情页)");
-                }
+                // 获取按钮绑定的 DataContext (GameEntry 对象)，以便获取标题
+                var gameEntry = btn.DataContext as GameEntry;
+                string title = gameEntry?.Title ?? "Game Detail";
+
+                // 跳转到通用详情页，传递 ID 和 标题
+                NavigationService.Navigate(new GameDetailPage(gameId, title));
             }
         }
     }

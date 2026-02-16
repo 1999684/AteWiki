@@ -110,5 +110,13 @@ namespace AtelierWiki.ViewModels
 
             CurrentDataTable = view;
         }
+
+
+        private string _pageTitle;
+        public string PageTitle
+        {
+            get => _pageTitle;
+            set => SetProperty(ref _pageTitle, value);
+        }
     }
 }
