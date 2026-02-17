@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MiniExcelLibs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -9,6 +10,8 @@ namespace AtelierWiki.ViewModels
 {
     public class ExcelViewModel : ObservableObject
     {
+        public event Action<DataRowView> RequestScrollToRow;
+
         private Dictionary<string, DataTable> _allSheetsData = new Dictionary<string, DataTable>();
 
         private ObservableCollection<string> _sheetNames = new ObservableCollection<string>();
@@ -28,8 +31,10 @@ namespace AtelierWiki.ViewModels
                 {
                     if (!string.IsNullOrEmpty(value) && _allSheetsData.ContainsKey(value))
                     {
-                        SearchText = string.Empty; // 清空搜索框
-                        CurrentDataTable = _allSheetsData[value].DefaultView; // 切换显示的数据
+                        SearchText = string.Empty;
+                        var view = _allSheetsData[value].DefaultView;
+                        view.RowFilter = string.Empty;
+                        CurrentDataTable = view;
                     }
                 }
             }
@@ -42,6 +47,13 @@ namespace AtelierWiki.ViewModels
             set => SetProperty(ref _currentDataTable, value);
         }
 
+        private DataRowView _selectedRow;
+        public DataRowView SelectedRow
+        {
+            get => _selectedRow;
+            set => SetProperty(ref _selectedRow, value);
+        }
+
         private string _searchText;
         public string SearchText
         {
@@ -50,9 +62,16 @@ namespace AtelierWiki.ViewModels
             {
                 if (SetProperty(ref _searchText, value))
                 {
-                    ApplyFilter();
+                    FindAndLocateRow();
                 }
             }
+        }
+
+        private string _pageTitle;
+        public string PageTitle
+        {
+            get => _pageTitle;
+            set => SetProperty(ref _pageTitle, value);
         }
 
         public void LoadExcel(string filePath)
@@ -77,46 +96,50 @@ namespace AtelierWiki.ViewModels
             }
         }
 
-        private void ApplyFilter()
+        private void FindAndLocateRow()
         {
-            if (string.IsNullOrEmpty(SelectedSheetName) || !_allSheetsData.ContainsKey(SelectedSheetName))
+            if (string.IsNullOrEmpty(SelectedSheetName) ||
+                !_allSheetsData.ContainsKey(SelectedSheetName))
+            {
                 return;
+            }
+
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                SelectedRow = null;
+                return;
+            }
 
             var table = _allSheetsData[SelectedSheetName];
             var view = table.DefaultView;
 
-            if (string.IsNullOrWhiteSpace(SearchText))
-            {
-                view.RowFilter = string.Empty; // 清除过滤
-            }
-            else
-            {
-                string safeSearch = SearchText.Replace("'", "''")
-                                              .Replace("[", "[[]")
-                                              .Replace("%", "[%]")
-                                              .Replace("*", "[*]");
+            view.RowFilter = string.Empty;
 
-                List<string> filters = new List<string>();
-                foreach (DataColumn col in table.Columns)
+            string keyword = SearchText.ToLower(); 
+
+            foreach (DataRowView rowView in view)
+            {
+                bool match = false;
+
+                foreach (var item in rowView.Row.ItemArray)
                 {
-                    filters.Add($"Convert([{col.ColumnName}], 'System.String') LIKE '%{safeSearch}%'");
+                    if (item != null && item.ToString().ToLower().Contains(keyword))
+                    {
+                        match = true;
+                        break;
+                    }
                 }
 
-                if (filters.Count > 0)
+                if (match)
                 {
-                    view.RowFilter = string.Join(" OR ", filters);
+                    SelectedRow = rowView; 
+
+                    RequestScrollToRow?.Invoke(rowView);
+                    return;
                 }
             }
 
-            CurrentDataTable = view;
-        }
-
-
-        private string _pageTitle;
-        public string PageTitle
-        {
-            get => _pageTitle;
-            set => SetProperty(ref _pageTitle, value);
+            SelectedRow = null;
         }
     }
 }

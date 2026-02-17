@@ -8,20 +8,18 @@
       Title="Game Detail">
 
     <Page.Resources>
-        <!-- =========================== -->
-        <!-- 1. 基础色板定义 -->
-        <!-- =========================== -->
+        <!-- 颜色资源 -->
         <SolidColorBrush x:Key="TechBgBrush" Color="#0F172A"/>
         <SolidColorBrush x:Key="TechPanelBrush" Color="#1E293B"/>
         <SolidColorBrush x:Key="TechAccentBrush" Color="#00F0FF"/>
         <SolidColorBrush x:Key="TechTextBrush" Color="#E2E8F0"/>
         <SolidColorBrush x:Key="TechDimTextBrush" Color="#94A3B8"/>
 
+        <!-- 自定义滚动条样式 -->
         <Style x:Key="TechScrollBarStyle" TargetType="{x:Type ScrollBar}">
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
             <Setter Property="Foreground" Value="{StaticResource TechPanelBrush}"/>
             <Setter Property="Background" Value="Transparent"/>
-
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollBar}">
@@ -31,10 +29,7 @@
                                     <Thumb x:Name="Thumb">
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="{x:Type Thumb}">
-                                                <Border x:Name="ThumbBorder" 
-                                                        Background="#3300F0FF" 
-                                                        CornerRadius="4"
-                                                        Margin="1"/>
+                                                <Border x:Name="ThumbBorder" Background="#3300F0FF" CornerRadius="4" Margin="1"/>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
                                                         <Setter TargetName="ThumbBorder" Property="Background" Value="{StaticResource TechAccentBrush}"/>
@@ -57,21 +52,20 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-
             <Style.Triggers>
-                <!-- 水平滚动条：高度为8（细条），宽度自动（长度延伸） -->
                 <Trigger Property="Orientation" Value="Horizontal">
                     <Setter Property="Height" Value="8"/>
                     <Setter Property="Width" Value="Auto"/>
                 </Trigger>
-                <!-- 垂直滚动条：宽度为0（隐藏但保留功能），高度自动 -->
                 <Trigger Property="Orientation" Value="Vertical">
-                    <Setter Property="Width" Value="0"/>
+                    <Setter Property="Width" Value="8"/>
+                    <!-- 修改为8以便能看到滚动条 -->
                     <Setter Property="Height" Value="Auto"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
+        <!-- 自定义按钮样式 -->
         <Style x:Key="TechButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#8899A6"/>
@@ -84,8 +78,7 @@
                     <ControlTemplate TargetType="Button">
                         <Grid Background="Transparent">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock x:Name="Arrow" Text="◄" FontSize="12" Margin="0,1,8,0" 
-                                           RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center">
+                                <TextBlock x:Name="Arrow" Text="◄" FontSize="12" Margin="0,1,8,0" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center">
                                     <TextBlock.RenderTransform>
                                         <TranslateTransform X="0"/>
                                     </TextBlock.RenderTransform>
@@ -98,18 +91,14 @@
                                 <Trigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Arrow" 
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                             To="-4" Duration="0:0:0.2" DecelerationRatio="0.5"/>
+                                            <DoubleAnimation Storyboard.TargetName="Arrow" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="-4" Duration="0:0:0.2" DecelerationRatio="0.5"/>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.EnterActions>
                                 <Trigger.ExitActions>
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Arrow" 
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                             To="0" Duration="0:0:0.2" DecelerationRatio="0.5"/>
+                                            <DoubleAnimation Storyboard.TargetName="Arrow" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="0:0:0.2" DecelerationRatio="0.5"/>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.ExitActions>
@@ -130,11 +119,8 @@
     <Grid Background="{StaticResource TechBgBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- 标题 -->
             <RowDefinition Height="Auto"/>
-            <!-- 页签 -->
             <RowDefinition Height="Auto"/>
-            <!-- 搜索 -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -206,7 +192,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="350"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="SEARCH_QUERY >" FontFamily="Consolas" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="{StaticResource TechAccentBrush}" FontSize="14"/>
+                <TextBlock Text="关键字 >" FontFamily="Consolas" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="{StaticResource TechAccentBrush}" FontSize="14"/>
                 <Border Grid.Column="1" BorderBrush="#33475D6F" BorderThickness="1" CornerRadius="2" Background="#0B0E14">
                     <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
                              Padding="8" Background="Transparent" BorderThickness="0" 
@@ -218,7 +204,10 @@
 
         <!-- 4. 数据表格 (DataGrid) -->
         <DataGrid Grid.Row="3" 
+                  x:Name="MyDataGrid"
                   ItemsSource="{Binding CurrentDataTable}"
+                  SelectedItem="{Binding SelectedRow}"
+                  SelectionMode="Single"
                   AutoGenerateColumns="True"
                   CanUserAddRows="False"
                   IsReadOnly="True"
@@ -236,12 +225,11 @@
                   Margin="20,0,20,20"
                   
                   ScrollViewer.CanContentScroll="True"
-                  VerticalScrollBarVisibility="Hidden" 
+                  VerticalScrollBarVisibility="Auto" 
                   HorizontalScrollBarVisibility="Auto"
                   
                   MinColumnWidth="120">
 
-            <!-- 应用自定义滚动条样式 -->
             <DataGrid.Resources>
                 <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource TechScrollBarStyle}"/>
             </DataGrid.Resources>
@@ -260,15 +248,23 @@
 
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
-                    <Setter Property="Height" Value="40"/>
+                    <Setter Property="MinHeight" Value="40"/>
+                    <Setter Property="Height" Value="Auto"/>
                     <Style.Triggers>
+                        <!-- 鼠标悬停样式 -->
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="#2200F0FF"/>
                             <Setter Property="BorderBrush" Value="{StaticResource TechAccentBrush}"/>
                         </Trigger>
+
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#4400F0FF"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource TechAccentBrush}"/>
+                            <!-- 背景：半透明亮黄 -->
+                            <Setter Property="Background" Value="#88FFD700"/>
+                            <!-- 边框：实心黄 -->
+                            <Setter Property="BorderBrush" Value="white"/>
+                            <!-- 字体：加粗白色，确保清晰 -->
+                            <Setter Property="Foreground" Value="#FFFF00"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -276,7 +272,7 @@
 
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
-                    <Setter Property="Padding" Value="10,0"/>
+                    <Setter Property="Padding" Value="10,8"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="DataGridCell">
@@ -288,13 +284,19 @@
                     </Setter>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="White"/>
+                            <!-- 背景：半透明亮黄 -->
+                            <Setter Property="Background" Value="#88FFD700"/>
+                            <!-- 边框：实心黄 -->
+                            <Setter Property="BorderBrush" Value="white"/>
+                            <!-- 字体：加粗白色，确保清晰 -->
+                            <Setter Property="Foreground" Value="#FFFF00"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.CellStyle>
         </DataGrid>
+
 
     </Grid>
 </Page>
