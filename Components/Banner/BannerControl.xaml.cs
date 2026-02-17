@@ -96,7 +96,7 @@ namespace AtelierWiki.Components.Banner
 
                 if (!path.StartsWith("pack:"))
                 {
-                    packUri = $"pack://application:,,,/AteWiki;component{path}";
+                    packUri = $"pack://application:,,,/AtelierWiki;component{path}";
                 }
 
                 bitmap.UriSource = new Uri(packUri, UriKind.Absolute);

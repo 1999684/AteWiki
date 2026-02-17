@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{28785D12-19B9-4B58-B157-622665D7CA77}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>AteWiki</RootNamespace>
-    <AssemblyName>AteWiki</AssemblyName>
+    <RootNamespace>AtelierWiki</RootNamespace>
+    <AssemblyName>AtelierWiki</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -213,11 +213,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Pages\GameData\AteWikiA11.xaml.cs">
-      <DependentUpon>AteWikiA11.xaml</DependentUpon>
+    <Compile Include="Components\Dialogs\A11MaterialEditDialog.xaml.cs">
+      <DependentUpon>A11MaterialEditDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\Dialogs\A11TechDialog.xaml.cs">
+      <DependentUpon>A11TechDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Dock\DockBar.xaml.cs">
+      <DependentUpon>DockBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\MaterialTemplateSelector.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Converters\RelativePathConverter.cs" />
+    <Compile Include="Data\A11\A11DbManager.cs" />
+    <Compile Include="Data\A11\Material.cs" />
+    <Compile Include="Data\DockItemData.cs" />
+    <Compile Include="Pages\A11\A11MainFrame.xaml.cs">
+      <DependentUpon>A11MainFrame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\A11\A11MaterialPage.xaml.cs">
+      <DependentUpon>A11MaterialPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\A11MaterialViewModel.cs" />
     <Compile Include="ViewModels\ExcelViewModel.cs" />
     <Page Include="Components\Banner\BannerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Dialogs\A11MaterialEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Dialogs\A11TechDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Dock\DockBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -239,7 +271,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Pages\GameData\AteWikiA11.xaml">
+    <Page Include="Pages\A11\A11MainFrame.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\A11\A11MaterialPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,9 +305,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Content Include="DataFiles\A11_Data.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -357,9 +390,18 @@
     <Resource Include="Assets\Images\banner\person\a26.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\Icon\material.png" />
+    <Resource Include="Assets\Icon\edit.png" />
+    <Resource Include="Assets\Icon\home.png" />
+    <Resource Include="Assets\Icon\search.png" />
+    <Resource Include="Assets\UserImages\mock.png" />
+    <Resource Include="Assets\Icon\feature.png" />
+    <Resource Include="Assets\Icon\harmony.png" />
+    <Resource Include="Assets\Icon\monster.png" />
     <Content Include="atewiki.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Pages\A11\Img\bg.webp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\CommunityToolkit.Mvvm.8.4.0\build\CommunityToolkit.Mvvm.targets" Condition="Exists('packages\CommunityToolkit.Mvvm.8.4.0\build\CommunityToolkit.Mvvm.targets')" />

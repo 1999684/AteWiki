@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AteWiki.Properties {
+namespace AtelierWiki.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

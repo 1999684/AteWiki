@@ -42,7 +42,7 @@ namespace AtelierWiki.Pages.Home
                 // 推荐根据 ID 跳转
                 if (gameId == 1)
                 {
-                    NavigationService.Navigate(new Pages.GameData.AteWikiA11());
+                    NavigationService.Navigate(new Pages.A11.A11MainFrame());
                 }
                 else
                 {
