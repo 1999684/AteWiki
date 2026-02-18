@@ -17,7 +17,8 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>A:\toGit\WPF\Pubish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -27,10 +28,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -74,6 +75,18 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>atewiki.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>11F86463F9BF3D6E17DE531674F1C0A502C6D78D</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>AteWiki_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommunityToolkit.Mvvm, Version=8.4.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
@@ -227,14 +240,19 @@
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\RelativePathConverter.cs" />
     <Compile Include="Data\A11\A11DbManager.cs" />
+    <Compile Include="Data\A11\Feature.cs" />
     <Compile Include="Data\A11\Material.cs" />
     <Compile Include="Data\DockItemData.cs" />
+    <Compile Include="Pages\A11\A11FeaturePage.xaml.cs">
+      <DependentUpon>A11FeaturePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\A11\A11MainFrame.xaml.cs">
       <DependentUpon>A11MainFrame.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\A11\A11MaterialPage.xaml.cs">
       <DependentUpon>A11MaterialPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\A11FeatureViewModel.cs" />
     <Compile Include="ViewModels\A11MaterialViewModel.cs" />
     <Compile Include="ViewModels\ExcelViewModel.cs" />
     <Page Include="Components\Banner\BannerControl.xaml">
@@ -271,6 +289,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\A11\A11FeaturePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\A11\A11MainFrame.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -305,6 +327,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="AteWiki_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

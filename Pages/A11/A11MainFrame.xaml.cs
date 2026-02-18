@@ -1,6 +1,7 @@
-﻿using AtelierWiki.Data;
-using AtelierWiki.Components.Dock;
+﻿using AtelierWiki.Components.Dock;
+using AtelierWiki.Data;
 using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,7 +45,7 @@ namespace AtelierWiki.Pages.A11
                     ContentFrame.Navigate(new A11MaterialPage());
                     break;
                 case "A11Feature":
-                    MessageBox.Show("特性");
+                    ContentFrame.Navigate(new A11FeaturePage());
                     break;
                 case "A11Monster":
                     // ContentFrame.Navigate(new MapPage());
@@ -54,7 +55,7 @@ namespace AtelierWiki.Pages.A11
                     MessageBox.Show("調合");
                     break;
                 case "Back":
-                    if (NavigationService.CanGoBack) NavigationService.GoBack();
+                    NavigationService.Navigate(new Uri("/Pages/Home/HomePage.xaml", UriKind.Relative));
                     break;
                 default:
                     break;

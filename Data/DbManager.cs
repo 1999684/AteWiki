@@ -9,17 +9,9 @@ namespace AtelierWiki.Data
 {
     public class DbManager
     {
-        // ==========================================
-        // 1. 基础配置区域
-        // ==========================================
-
         private static string BaseDirectory => AppDomain.CurrentDomain.BaseDirectory;
         private static string DbPath => System.IO.Path.Combine(BaseDirectory, "AtelierWiki.db");
         private static string ConnectionString => $"Data Source={DbPath};Version=3;";
-
-        // ==========================================
-        // 2. 初始化与升级逻辑 (核心)
-        // ==========================================
 
         public static void Initialize()
         {
@@ -32,45 +24,29 @@ namespace AtelierWiki.Data
             {
                 conn.Open();
 
-                // 2.1 确保基础表结构存在
                 EnsureSchema(conn);
 
-                // 2.2 获取当前数据库的内部版本号 (Int32)
                 int currentDbVersion = conn.ExecuteScalar<int>("PRAGMA user_version");
 
-                // 打印当前版本用于调试
                 string verStr = IntToSemVer(currentDbVersion);
                 System.Diagnostics.Debug.WriteLine($"[DB初始化] 当前数据库版本: {verStr} (Int: {currentDbVersion})");
 
-                // ==========================================
-                // 3. 版本迁移 (Migration) 区域
-                // ==========================================
-
-                // --- 目标版本: 1.0.1 ---
                 int v1_0_1 = GetVersionInt(1, 0, 1);
 
                 if (currentDbVersion < v1_0_1)
                 {
                     InsertVersion101Data(conn);
                     UpdateVersion(conn, 1, 0, 1);
-                    currentDbVersion = v1_0_1; // 更新内存变量，防止后续逻辑误判
+                    currentDbVersion = v1_0_1;
                 }
             }
         }
 
-        // ==========================================
-        // 4. 核心辅助方法：版本号算法
-        // ==========================================
-
-        // 将 Major.Minor.Patch 转换为 32位整数
-        // 规则: Major占高8位，Minor占中12位，Patch占低12位
-        // 支持范围: Major(0-255).Minor(0-4095).Patch(0-4095)
         private static int GetVersionInt(int major, int minor, int patch)
         {
             return (major << 24) | (minor << 12) | patch;
         }
 
-        // 更新数据库版本号
         private static void UpdateVersion(SQLiteConnection conn, int major, int minor, int patch)
         {
             int intVersion = GetVersionInt(major, minor, patch);
@@ -78,7 +54,6 @@ namespace AtelierWiki.Data
             System.Diagnostics.Debug.WriteLine($"[DB升级] 数据库已升级到: {major}.{minor}.{patch}");
         }
 
-        // 把整数还原成字符串 (仅用于调试显示)
         private static string IntToSemVer(int intVersion)
         {
             if (intVersion == 0) return "1.0.1";
@@ -87,10 +62,6 @@ namespace AtelierWiki.Data
             int patch = intVersion & 0xFFF;
             return $"{major}.{minor}.{patch}";
         }
-
-        // ==========================================
-        // 5. 具体的 SQL 操作
-        // ==========================================
 
         private static void EnsureSchema(SQLiteConnection conn)
         {
