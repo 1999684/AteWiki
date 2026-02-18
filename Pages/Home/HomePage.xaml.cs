@@ -39,10 +39,15 @@ namespace AtelierWiki.Pages.Home
         {
             if (sender is Button btn && btn.Tag is int gameId)
             {
-                // 推荐根据 ID 跳转
+                e.Handled = true;
+
                 if (gameId == 1)
                 {
                     NavigationService.Navigate(new Pages.A11.A11MainFrame());
+                }
+                else if (gameId == 2)
+                {
+                    NavigationService.Navigate(new Pages.A12.A12Main());
                 }
                 else
                 {
