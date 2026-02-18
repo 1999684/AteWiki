@@ -8,9 +8,9 @@
 
 展示：
 
-![首页](readmeImage/home.png)
+![首页](readmeImage/home.webp)
 
-![萝乐娜素材页](readmeImage/showpage.png)
+![萝乐娜素材页](readmeImage/showpage.webp)
 
 todo
 
