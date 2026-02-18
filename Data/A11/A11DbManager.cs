@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks; // 必须引用：用于异步操作
+using System.Threading.Tasks;
 
 namespace AtelierWiki.Data.A11
 {
@@ -54,11 +54,46 @@ namespace AtelierWiki.Data.A11
                         Note TEXT
                     );");
 
+                // 3. 调合表 (更新结构)
+                conn.Execute(@"
+                    CREATE TABLE IF NOT EXISTS Harmonies (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Name TEXT NOT NULL,
+                        Level INTEGER,
+                        Mat1 TEXT,
+                        Mat2 TEXT,
+                        Mat3 TEXT,
+                        Mat4 TEXT,
+                        Category TEXT,
+                        Acquisition TEXT,
+                        BgImagePath TEXT
+                    );");
+
                 // 数据库迁移逻辑：检查 IsExtension
                 var columns = conn.Query<string>("SELECT name FROM pragma_table_info('Features')").ToList();
                 if (!columns.Contains("IsExtension"))
                 {
                     conn.Execute("ALTER TABLE Features ADD COLUMN IsExtension INTEGER DEFAULT 0");
+                }
+
+                // 数据库迁移逻辑：检查 Harmonies 是否需要更新结构
+                var hColumns = conn.Query<string>("SELECT name FROM pragma_table_info('Harmonies')").ToList();
+                if (hColumns.Contains("Cat1")) // 旧结构标志
+                {
+                    conn.Execute("DROP TABLE Harmonies;");
+                    conn.Execute(@"
+                        CREATE TABLE Harmonies (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Name TEXT NOT NULL,
+                            Level INTEGER,
+                            Mat1 TEXT,
+                            Mat2 TEXT,
+                            Mat3 TEXT,
+                            Mat4 TEXT,
+                            Category TEXT,
+                            Acquisition TEXT,
+                            BgImagePath TEXT
+                        );");
                 }
 
                 // 初始化素材
@@ -72,7 +107,7 @@ namespace AtelierWiki.Data.A11
                 if (conn.ExecuteScalar<long>("SELECT COUNT(*) FROM Features") == 0)
                 {
                     string sql = @"
-                        INSERT INTO Features (Name, Extension, Cost, IsSynthesize, IsAttack, IsHeal, IsWeapon, IsArmor, IsAccessory, IsExtension, Description, Note) 
+                        INSERT INTO Features (Name, Extension, Cost, IsSynthesize, IsAttack, IsHeal, IsWeapon, IsArmor, IsAccessory, IsExtension, Description, Note)
                         VALUES (@Name, @Extension, @Cost, @IsSynthesize, @IsAttack, @IsHeal, @IsWeapon, @IsArmor, @IsAccessory, @IsExtension, @Description, @Note)";
 
                     conn.Execute(sql, new[] {
@@ -81,12 +116,22 @@ namespace AtelierWiki.Data.A11
                         new { Name="高級品", Extension="", Cost=10, IsSynthesize=true, IsAttack=true, IsHeal=true, IsWeapon=false, IsArmor=true, IsAccessory=true, IsExtension=false, Description="基本價格增加100%", Note="高價Lv1ｘ高價Lv2" }
                     });
                 }
+
+                // 初始化调合数据
+                if (conn.ExecuteScalar<long>("SELECT COUNT(*) FROM Harmonies") == 0)
+                {
+                    string sql = @"
+                        INSERT INTO Harmonies (Name, Level, Mat1, Mat2, Mat3, Mat4, Category, Acquisition, BgImagePath)
+                        VALUES (@Name, @Level, @Mat1, @Mat2, @Mat3, @Mat4, @Category, @Acquisition, @BgImagePath)";
+
+                    conn.Execute(sql, new[] {
+                        new { Name="中和劑·紅", Level=1, Mat1="（花）", Mat2="水", Mat3="", Mat4="", Category="调合品", Acquisition="初期持有", BgImagePath="" },
+                        new { Name="中和劑·藍", Level=1, Mat1="（矿石）", Mat2="水", Mat3="", Mat4="", Category="调合品", Acquisition="初期持有", BgImagePath="" }
+                    });
+                }
             }
         }
 
-        // ==========================================
-        // Material 方法
-        // ==========================================
         public static List<Material> GetAllMaterials()
         {
             using (var conn = new SQLiteConnection(ConnectionString))
@@ -121,21 +166,60 @@ namespace AtelierWiki.Data.A11
         }
 
         // ==========================================
-        // Feature 方法 (特性相关) - 优化为异步
+        // Harmony 方法
+        // ==========================================
+        public static List<Harmony> GetAllHarmonies()
+        {
+            using (var conn = new SQLiteConnection(ConnectionString))
+                return conn.Query<Harmony>("SELECT * FROM Harmonies ORDER BY Level, Name").ToList();
+        }
+
+        public static List<Harmony> SearchHarmonies(string keyword)
+        {
+            using (var conn = new SQLiteConnection(ConnectionString))
+                return conn.Query<Harmony>(@"SELECT * FROM Harmonies
+                                           WHERE Name LIKE @Kw OR Category LIKE @Kw OR Acquisition LIKE @Kw
+                                           OR Mat1 LIKE @Kw OR Mat2 LIKE @Kw OR Mat3 LIKE @Kw OR Mat4 LIKE @Kw",
+                                           new { Kw = $"%{keyword}%" }).ToList();
+        }
+
+        public static void AddHarmony(Harmony h)
+        {
+            using (var conn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = @"INSERT INTO Harmonies (Name, Level, Mat1, Mat2, Mat3, Mat4, Category, Acquisition, BgImagePath)
+                               VALUES (@Name, @Level, @Mat1, @Mat2, @Mat3, @Mat4, @Category, @Acquisition, @BgImagePath);
+                               SELECT last_insert_rowid();";
+                h.Id = conn.ExecuteScalar<int>(sql, h);
+            }
+        }
+
+        public static void DeleteHarmony(int id)
+        {
+            using (var conn = new SQLiteConnection(ConnectionString))
+                conn.Execute("DELETE FROM Harmonies WHERE Id = @Id", new { Id = id });
+        }
+
+        public static void UpdateHarmony(Harmony h)
+        {
+            using (var conn = new SQLiteConnection(ConnectionString))
+                conn.Execute(@"UPDATE Harmonies SET Name=@Name, Level=@Level, Mat1=@Mat1, Mat2=@Mat2,
+                               Mat3=@Mat3, Mat4=@Mat4, Category=@Category, Acquisition=@Acquisition, BgImagePath=@BgImagePath WHERE Id=@Id", h);
+        }
+
+        // ==========================================
+        // Feature 方法 (特性相关)
         // ==========================================
 
-        // 异步获取所有特性
         public static async Task<List<Feature>> GetAllFeaturesAsync()
         {
             using (var conn = new SQLiteConnection(ConnectionString))
             {
-                // 使用 QueryAsync 避免阻塞 UI 线程
                 var result = await conn.QueryAsync<Feature>("SELECT * FROM Features ORDER BY Cost, Name");
                 return result.ToList();
             }
         }
 
-        // 异步搜索特性
         public static async Task<List<Feature>> SearchFeaturesAsync(string keyword)
         {
             using (var conn = new SQLiteConnection(ConnectionString))
@@ -152,7 +236,7 @@ namespace AtelierWiki.Data.A11
             using (var conn = new SQLiteConnection(ConnectionString))
             {
                 string sql = @"
-                    INSERT INTO Features (Name, Extension, Cost, IsSynthesize, IsAttack, IsHeal, IsWeapon, IsArmor, IsAccessory, IsExtension, Description, Note) 
+                    INSERT INTO Features (Name, Extension, Cost, IsSynthesize, IsAttack, IsHeal, IsWeapon, IsArmor, IsAccessory, IsExtension, Description, Note)
                     VALUES (@Name, @Extension, @Cost, @IsSynthesize, @IsAttack, @IsHeal, @IsWeapon, @IsArmor, @IsAccessory, @IsExtension, @Description, @Note);
                     SELECT last_insert_rowid();";
                 item.Id = conn.ExecuteScalar<int>(sql, item);
@@ -165,8 +249,8 @@ namespace AtelierWiki.Data.A11
             using (var conn = new SQLiteConnection(ConnectionString))
             {
                 string sql = @"
-                    UPDATE Features SET Name=@Name, Extension=@Extension, Cost=@Cost, IsSynthesize=@IsSynthesize, IsAttack=@IsAttack, 
-                    IsHeal=@IsHeal, IsWeapon=@IsWeapon, IsArmor=@IsArmor, IsAccessory=@IsAccessory, IsExtension=@IsExtension, 
+                    UPDATE Features SET Name=@Name, Extension=@Extension, Cost=@Cost, IsSynthesize=@IsSynthesize, IsAttack=@IsAttack,
+                    IsHeal=@IsHeal, IsWeapon=@IsWeapon, IsArmor=@IsArmor, IsAccessory=@IsAccessory, IsExtension=@IsExtension,
                     Description=@Description, Note=@Note WHERE Id=@Id";
                 conn.Execute(sql, item);
             }

@@ -24,7 +24,7 @@ namespace AtelierWiki.Pages.A11
             {
                 new DockItemData { Label = "素材", TargetPage = "A11Material", IconPath = "/Assets/Icon/material.png" },
                 new DockItemData { Label = "特性", TargetPage = "A11Feature", IconPath = "/Assets/Icon/feature.png" },
-                new DockItemData { Label = "怪物", TargetPage = "A11Monster", IconPath = "/Assets/Icon/monster.png" },
+                //new DockItemData { Label = "怪物", TargetPage = "A11Monster", IconPath = "/Assets/Icon/monster.png" },
                 new DockItemData { Label = "調合", TargetPage = "A11Harmony", IconPath = "/Assets/Icon/harmony.png" },
                 new DockItemData { Label = "主页", TargetPage = "Back", IconPath = "/Assets/Icon/home.png" }
             };
@@ -52,7 +52,7 @@ namespace AtelierWiki.Pages.A11
                     MessageBox.Show("怪物");
                     break;
                 case "A11Harmony":
-                    MessageBox.Show("調合");
+                    ContentFrame.Navigate(new A11HarmonyPage());
                     break;
                 case "Back":
                     NavigationService.Navigate(new Uri("/Pages/Home/HomePage.xaml", UriKind.Relative));

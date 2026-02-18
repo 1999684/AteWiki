@@ -226,6 +226,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\Dialogs\A11HarmonyEditDialog.xaml.cs">
+      <DependentUpon>A11HarmonyEditDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Components\Dialogs\A11MaterialEditDialog.xaml.cs">
       <DependentUpon>A11MaterialEditDialog.xaml</DependentUpon>
     </Compile>
@@ -235,16 +238,21 @@
     <Compile Include="Components\Dock\DockBar.xaml.cs">
       <DependentUpon>DockBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\GenericTemplateSelector.cs" />
     <Compile Include="Components\MaterialTemplateSelector.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\RelativePathConverter.cs" />
     <Compile Include="Data\A11\A11DbManager.cs" />
     <Compile Include="Data\A11\Feature.cs" />
+    <Compile Include="Data\A11\Harmony.cs" />
     <Compile Include="Data\A11\Material.cs" />
     <Compile Include="Data\DockItemData.cs" />
     <Compile Include="Pages\A11\A11FeaturePage.xaml.cs">
       <DependentUpon>A11FeaturePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\A11\A11HarmonyPage.xaml.cs">
+      <DependentUpon>A11HarmonyPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\A11\A11MainFrame.xaml.cs">
       <DependentUpon>A11MainFrame.xaml</DependentUpon>
@@ -253,11 +261,16 @@
       <DependentUpon>A11MaterialPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\A11FeatureViewModel.cs" />
+    <Compile Include="ViewModels\A11HarmonyViewModel.cs" />
     <Compile Include="ViewModels\A11MaterialViewModel.cs" />
     <Compile Include="ViewModels\ExcelViewModel.cs" />
     <Page Include="Components\Banner\BannerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Dialogs\A11HarmonyEditDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Components\Dialogs\A11MaterialEditDialog.xaml">
       <SubType>Designer</SubType>
@@ -292,6 +305,10 @@
     <Page Include="Pages\A11\A11FeaturePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\A11\A11HarmonyPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\A11\A11MainFrame.xaml">
       <SubType>Designer</SubType>
