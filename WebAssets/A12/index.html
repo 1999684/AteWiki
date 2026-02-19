@@ -3,18 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>跳转测试</title>
-
+    <title>A12Main</title>
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-
     <div id="app">
-        <button @click="goHome">跳转到 HomePage</button>
-    </div>
+        <transition name="fade">
+            <div class="loading-mask" v-if="isLoading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">LOADING...</div>
+            </div>
+        </transition>
+        <div class="nav">
+            <div class="nav-left nav-btn" @click="goHome">
+                <div class="nav-left2"></div>
+            </div>
+            
+            <div class="nav-right">
+                <transition-group class="nav-items" tag="div" name="nav-slide">
+                    <div class="nav-item nav-btn"
+                         v-for="(item, i) in navigator"
+                         :key="item.name"
+                         v-if="isNavOpen"
+                         :style="{transitionDelay: `${i * 0.1}s`}"
+                         @click="handleNavClick(item)">
+                        {{item.name}}
+                    </div>
+                </transition-group>
 
-    <script>
-    </script>
+                <div class="menu-btn nav-btn" @click="isNavOpen = !isNavOpen">
+                    <span class="icon" v-if="!isNavOpen">☰</span>
+                    <span class="icon" v-else>×</span>
+                </div>
+            </div>
+        </div>
+        
+        <iframe :src="iframeSrc" frameborder="0" @load="onIframeLoad" :key="iframeKey"></iframe>
+    </div>
 
     <script src="../Common/vue.js"></script>
     <script src="./index.js"></script>

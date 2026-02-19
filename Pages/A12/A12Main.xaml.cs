@@ -17,15 +17,11 @@ namespace AtelierWiki.Pages.A12
 
         private async void InitializeWebView()
         {
-            // 1. 初始化环境
             await WebBrowser.EnsureCoreWebView2Async();
 
-            // 2. [关键] 订阅 JS 发来的消息事件
             WebBrowser.WebMessageReceived += WebBrowser_WebMessageReceived;
 
-            // 3. 配置路径
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
-            // 注意：请确保你的 HTML 文件确实在这个路径下
             string htmlPath = Path.Combine(appPath, "WebAssets", "A12", "index.html");
 
             // 4. 加载页面
