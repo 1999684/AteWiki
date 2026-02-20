@@ -121,9 +121,10 @@ namespace AtelierWiki.Components.Banner
             var url = _bannerItems[_currentIndex].SteamUrl;
             if (!string.IsNullOrEmpty(url))
             {
+                string steamUrl2 = "steam://openurl/" + url;
                 try
                 {
-                    Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+                    Process.Start(new ProcessStartInfo { FileName = steamUrl2, UseShellExecute = true });
                 }
                 catch (Exception ex)
                 {

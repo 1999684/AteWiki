@@ -1,0 +1,36 @@
+.nav {
+    position: absolute;
+    transition: all 0.3s ease;
+    background: #0F172A;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.nav-con-hidden {
+    left: -2.5rem;
+    opacity: 0;
+}
+.nav-con-show {
+    left: 0;
+    opacity: 1;
+}
+.nav .logo {
+    margin: .3rem .3rem 0;
+    width: 2.2rem;
+    height: 1rem;
+    background: url(./Img/image.6bhlstnfew.webp) center top / auto 1.78rem no-repeat;
+}
+.nav .nav-items {
+    padding-left: .3rem;
+    color: #FFEFE2;
+    font-size: 0.2rem;
+    line-height: 0.5rem;
+    width: calc(100% - .3rem);
+    font-weight: bold;
+    border-bottom: 1px dashed #FFEFE2;
+}
+.nav .nav-items:hover {
+    color: #fff;
+    background: #E5CE8A1A;
+}

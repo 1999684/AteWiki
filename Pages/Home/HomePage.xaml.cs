@@ -49,6 +49,10 @@ namespace AtelierWiki.Pages.Home
                 {
                     NavigationService.Navigate(new Pages.A12.A12Main());
                 }
+                else if (gameId == 7)
+                {
+                    NavigationService.Navigate(new Pages.A17.A17Main());
+                }
                 else
                 {
                     MessageBox.Show($"你点击了游戏 ID: {gameId} (暂无详情页)");

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A17Main</title>
+    <link rel="stylesheet" href="../Common/common.css">
+    <link rel="stylesheet" href="../Common/index.css">
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    <div id="app">
+        <transition name="fade">
+            <div class="loading-mask" v-if="isLoading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">LOADING...</div>
+            </div>
+        </transition>
+        <div :class="[openNav ? 'nav-con-show' : 'nav-con-hidden', 'nav']" @mouseenter="openNav = true"
+            @mouseleave="openNav = false">5
+            <div class="logo" @click="goHome">
+            </div>
+            <span class="nav-items" v-for="(item, i) in navigator" :key="i" @click="handleNavClick(item)">
+                {{ item.name}}
+            </span>
+        </div>
+
+        <iframe :src="iframeSrc" frameborder="0" @load="onIframeLoad" :key="iframeKey"></iframe>
+    </div>
+
+    <script src="../Common/vue.js"></script>
+    <script src="../Common/mask.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>

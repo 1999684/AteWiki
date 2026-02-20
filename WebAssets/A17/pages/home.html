@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A17Main</title>
+    <link rel="stylesheet" href="../../Common/common.css">
+    <link rel="stylesheet" href="./home.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="top">
+            <!-- <span class="tips">tips:图片存在github仓库内，若未能展示，可 <a href="https://steampp.net/" class="url"
+                    target="_blank">Watt Toolkit</a>
+                其他加速方式</span> -->
+        </div>
+        <div class="character-con flex-wrap flex-center">
+            <div class="chara-item" v-for="(item, i) in characterList" :key="i" @click="showChar(item)">
+                <img :src="item.thumbnail" alt="" class="thumbnail">
+                <span class="name">{{ item.name }}</span>
+            </div>
+        </div>
+        <div class="mask2 flex-center" v-if="showModal" @click="showModal = false">
+            <div class="modal-content flex-center">
+                <div class="character-info">
+                    <h4>{{ showInfo.nameEn }}</h4>
+                    <h5>{{ showInfo.name }} / {{ showInfo.nameJp }}</h5>
+                    <p class="character-basic">{{ showInfo.basic }}</p>
+                    <p class="character-cv">CV: {{ showInfo.cv }}</p>
+                    <div class="character-description">
+                        <p v-for="desc in showInfo.description" :key="desc">{{ desc }}</p>
+                    </div>
+                </div>
+                <img :src="showInfo.fullImage" :alt="showInfo.name" class="character-full">
+            </div>
+        </div>
+    </div>
+    <script src="../../Common/vue.js"></script>
+    <script src="./home.js"></script>
+</body>
+
+</html>

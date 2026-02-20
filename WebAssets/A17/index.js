@@ -4,7 +4,7 @@ new Vue({
         loadMask()
     ],
     data: {
-        isNavOpen: false,
+        openNav: false,
         iframeKey: 0,
         isLoading: true,
         navigator: [
